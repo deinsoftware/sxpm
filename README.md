@@ -13,9 +13,9 @@ npm install sxpm
 ### Translate a command to a specific package manager
 
 ```typescript
-import { translate } from 'sxpm'
+import { translateCommand } from 'sxpm'
 
-const result = translate({
+const result = translateCommand({
   command: 'add',
   args: ['react', '--save-dev'],
   from: 'npm',
@@ -26,54 +26,46 @@ console.log(result)
 // { command: 'add', args: ['react', '-D'], pm: 'pnpm' }
 ```
 
-### Translate to all package managers
+### Translate arguments between package managers
 
 ```typescript
-import { translateToAll } from 'sxpm'
+import { translateArgs } from 'sxpm'
 
-const results = translateToAll({
-  command: 'add',
-  args: ['react'],
-  from: 'npm'
+const result = translateArgs({
+  args: ['--save-dev', 'react'],
+  from: 'npm',
+  to: 'pnpm'
 })
 
-console.log(results)
-// [
-//   { command: 'add', args: ['react'], pm: 'pnpm' },
-//   { command: 'add', args: ['react'], pm: 'yarn' },
-//   ...
-// ]
-```
-
-### Detect current package manager
-
-```typescript
-import { detectPackageManager } from 'sxpm'
-
-const result = await detectPackageManager()
 console.log(result)
-// { origin: 'lock', cmd: 'pnpm' } | undefined
+// ['-D', 'react']
 ```
 
 ## API
 
-### `translate(params: TranslateParams): TranslateResult`
+### `translateCommand(params): TranslateCommandResult`
 
 Translates a command from one package manager to another.
 
-### `translateToAll(params: Omit<TranslateParams, 'to'>): TranslateResult[]`
+### `translateArgs(params): TranslateArgsResult`
 
-Translates a command from one package manager to all supported package managers.
+Translates arguments from one package manager to another.
 
-### `detectPackageManager(): Promise<DetectResult | undefined>`
+### `cleanFlag(flag, from, to): string | [string, number]`
 
-Detects the current package manager based on:
+Cleans a flag for translation between package managers.
 
-1. `swpm` property in package.json (pinned)
-2. `packageManager` property in package.json
-3. Lock files
-4. Deno config files
-5. `SWPM` environment variable
+### `getPackageConfig(cmd): PackageConfiguration | undefined`
+
+Gets the configuration for a specific package manager.
+
+### `packageExists(cmd): boolean`
+
+Checks if a package manager is supported.
+
+### `availablePackages(): PackageManagerList[]`
+
+Returns list of all supported package managers.
 
 ## Supported Package Managers
 
