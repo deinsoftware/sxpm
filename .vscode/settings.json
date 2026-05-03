@@ -1,0 +1,61 @@
+{
+  "cSpell.words": [
+    "bun",
+    "bunx",
+    "CHEATSHEET",
+    "dein",
+    "deinsoftware",
+    "equiman",
+    "esnext",
+    "github",
+    "Logomark",
+    "nmpjs",
+    "npmignore",
+    "npmjs",
+    "npmrc",
+    "outdir",
+    "patreon",
+    "paypal",
+    "pnpm",
+    "postbuild",
+    "sxpm",
+    "unpublish"
+  ],
+  "files.exclude": {
+    "**/*.js.map": {
+      "when": "$(basename)"
+    },
+    "**/node_modules": false
+  },
+  "js/ts.autoClosingTags.enabled": true,
+  "js/ts.suggest.autoImports": true,
+  "js/ts.format.enabled": true,
+  "js/ts.validate.enabled": true,
+  "search.exclude": {
+    "**/coverage": true,
+    "**/node_modules": true
+  },
+  "editor.formatOnSave": true,
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+  ],
+  "[javascript][typescript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.formatOnSave": false,
+    "editor.codeActionsOnSave": {
+      "source.formatDocument": "explicit",
+      "source.fixAll.eslint": "explicit"
+    },
+  },
+  "explorer.fileNesting.patterns": {
+    "README*": "BRAND*, CHANGELOG*, CODE_OF_CONDUCT.md, CONTRIBUTING.md, LICENSE*, README*, CHEATSHEET*, TEMPLATES*",
+    "package*": ".gitignore, bunfig.toml, .npmignore, .eslintignore, .eslintrc.cjs, bun.lockb, tsconfig.json, vitest.config.ts, globals.d.ts",
+    "*.js": "$(capture).*.js, $(capture).d.js.map, $(capture)_*.js, $(capture)*.snap",
+    "*.ts": "$(capture).*.ts, $(capture).d.ts.map, $(capture)_*.ts, $(capture)*.snap",
+  },
+  "markdownlint.config": {
+    "MD024": false
+  },
+  "testing.automaticallyOpenPeekView": "never",
+}

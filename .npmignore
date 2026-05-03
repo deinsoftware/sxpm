@@ -1,0 +1,7 @@
+node_modules/
+types/
+**/*.types.*
+**/*.map.*
+build/
+sxpm*.tgz
+tsconfig.build.tsbuildinfo
