@@ -37,10 +37,6 @@
     "deno"
   ],
   "license": "MIT",
-  "dependencies": {
-    "find-up": "8.0.0",
-    "semver": "7.7.4"
-  },
   "devDependencies": {
     "@eslint/eslintrc": "3.3.5",
     "@eslint/js": "10.0.1",
