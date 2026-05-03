@@ -1,10 +1,39 @@
-import { defineConfig } from 'vitest/config'
+import { configDefaults, defineConfig } from 'vitest/config'
+
+const include = [
+  'src/**/*'
+]
+
+const exclude = [
+  ...configDefaults.exclude,
+  'bin/**',
+  'test{,s}/**',
+  'test{,-*}.{js,cjs,mjs,ts,tsx,jsx}',
+  '**/*{.,-}types.{js,cjs,mjs,ts,tsx,jsx}',
+  '**/*{.,-}test.{js,cjs,mjs,ts,tsx,jsx}',
+  'src/index.ts'
+]
 
 export default defineConfig({
   test: {
-    pool: 'forks',
+    globals: true,
+    reporters: ['verbose'],
+    include: ['./src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    exclude: [
+      ...configDefaults.exclude,
+      '**/test.{js,cjs,mjs,ts,tsx,jsx}'
+    ],
     coverage: {
-      provider: 'v8'
+      provider: 'v8',
+      reporter: ['text', 'html', 'lcov'],
+      include: [...include],
+      exclude: [...exclude],
+      thresholds: {
+        statements: 95,
+        branches: 80,
+        functions: 95,
+        lines: 95
+      }
     }
   }
 })
