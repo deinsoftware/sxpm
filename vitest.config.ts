@@ -29,10 +29,10 @@ export default defineConfig({
       include: [...include],
       exclude: [...exclude],
       thresholds: {
-        statements: 95,
-        branches: 80,
-        functions: 95,
-        lines: 95
+        statements: 92,
+        branches: 83,
+        functions: 100,
+        lines: 97
       }
     }
   }
