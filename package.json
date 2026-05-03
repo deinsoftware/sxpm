@@ -1,0 +1,56 @@
+{
+  "name": "sxpm",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=20"
+  },
+  "description": "Switch Cross Package Manager",
+  "type": "module",
+  "main": "./bin/index.js",
+  "exports": {
+    ".": "./bin/index.js"
+  },
+  "scripts": {
+    "prebuild": "rm -rf bin/",
+    "build": "tsc",
+    "postbuild": "cp package*.json .npmignore README.md LICENSE CHANGELOG.md bin && (cd bin && npm ci --omit=dev --ignore-scripts)",
+    "pack": "npm pack bin/ --pack-destination=\\\"bin/\\\"",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest --run --reporter verbose --pool=forks",
+    "test:w": "vitest --pool=forks",
+    "test:c": "vitest run --coverage --pool=forks",
+    "test:wc": "vitest watch --coverage --pool=forks",
+    "test:ui": "vitest --ui",
+    "ts:check": "tsc --noEmit",
+    "ts:diagnostics": "tsc --extendedDiagnostics",
+    "ts:trace": "tsc --traceResolution"
+  },
+  "keywords": [
+    "sxpm",
+    "package-manager",
+    "translator",
+    "npm",
+    "yarn",
+    "pnpm",
+    "bun",
+    "deno"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "find-up": "8.0.0",
+    "semver": "7.7.4"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "3.3.5",
+    "@eslint/js": "10.0.1",
+    "@types/node": "25.6.0",
+    "@types/semver": "7.7.1",
+    "eslint": "10.3.0",
+    "globals": "17.6.0",
+    "type-fest": "5.6.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.59.1",
+    "vitest": "4.1.5"
+  }
+}
