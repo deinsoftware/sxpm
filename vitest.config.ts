@@ -1,23 +1,22 @@
 import { configDefaults, defineConfig } from 'vitest/config'
+import { resolve } from 'path'
 
 export default defineConfig({
   test: {
     globals: true,
-    reporters: ['verbose'],
-    include: [
-      './src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'
-    ],
-    exclude: [
-      ...configDefaults.exclude,
-      '**/*.test.ts'
-    ],
+    alias: {
+      sxpm: resolve(__dirname, './src/index.ts')
+    },
+    include: ['src/**/*.test.ts'],
+    exclude: [...configDefaults.exclude],
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'html', 'lcov'],
+      reporter: ['text'],
       include: ['src/**/*.ts'],
       exclude: [
-        ...configDefaults.exclude,
-        '**/*.test.ts'
+        'src/**/*.test.ts',
+        'src/types/**',
+        'src/index.ts'
       ]
     }
   }

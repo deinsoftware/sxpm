@@ -4,6 +4,7 @@ export type TranslateCommandParams = {
     command: string
     args: string[]
     packageManagers: PackageManagerList[]
+    packageName?: string
 }
 
 export type TranslateCommandResult = {
@@ -19,6 +20,7 @@ export type TranslateArgsParams = {
     args: string[]
     packageManagers: PackageManagerList[]
     command?: string
+    packageName?: string
 }
 
 export type TranslateArgsResult = {

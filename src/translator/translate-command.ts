@@ -17,7 +17,8 @@ const addArgs = (args: string[], flags: (string | number)[]): void => {
 const translateSingle = (
   command: string,
   args: string[],
-  targetPM: PackageManagerList
+  targetPM: PackageManagerList,
+  packageName?: string
 ): TranslateCommandResult[string] => {
   const pmParts = targetPM.split('@')
   const basePM = pmParts[0]
@@ -67,6 +68,14 @@ const translateSingle = (
     }
   }
 
+  if (packageName) {
+    for (let i = 0; i < newArgs.length; i++) {
+      if (newArgs[i].includes('<package>')) {
+        newArgs[i] = newArgs[i].replace('<package>', packageName)
+      }
+    }
+  }
+
   const cli = [config.cmd, newCommand, ...newArgs].join(' ')
 
   return {
@@ -79,7 +88,7 @@ const translateSingle = (
 export function translateCommand(
   params: TranslateCommandParams
 ): TranslateCommandResult {
-  const { command, args, packageManagers } = params
+  const { command, args, packageManagers, packageName } = params
 
   const targets = packageManagers.length === 0
     ? availablePackages()
@@ -88,7 +97,7 @@ export function translateCommand(
   const result: TranslateCommandResult = {}
 
   for (const pm of targets) {
-    const translation = translateSingle(command, args, pm)
+    const translation = translateSingle(command, args, pm, packageName)
     result[pm] = translation
   }
 

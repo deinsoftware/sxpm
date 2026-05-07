@@ -48,7 +48,8 @@ const moveFlag = (args: string[], argConfig: [string, number], packageName?: str
 const translateSingleArgs = (
   args: string[],
   targetPM: PackageManagerList,
-  command?: string
+  command?: string,
+  packageName?: string
 ): TranslateArgsResult[string] => {
   const pmParts = targetPM.split('@')
   const basePM = pmParts[0]
@@ -75,7 +76,7 @@ const translateSingleArgs = (
       replaceFlag(newArgs, flag, action)
     } else if (Array.isArray(action)) {
       removeFlagAndValue(newArgs, flag, false)
-      moveFlag(newArgs, action as [string, number])
+      moveFlag(newArgs, action as [string, number], packageName)
     } else if (typeof action === 'object' && action !== null && !Array.isArray(action)) {
       removeFlagAndValue(newArgs, flag, true)
       if (command && command in action) {
@@ -94,7 +95,7 @@ const translateSingleArgs = (
 }
 
 export function translateArgs(params: TranslateArgsParams): TranslateArgsResult {
-  const { args, packageManagers, command } = params
+  const { args, packageManagers, command, packageName } = params
 
   const targets = packageManagers.length === 0
     ? availablePackages()
@@ -103,7 +104,7 @@ export function translateArgs(params: TranslateArgsParams): TranslateArgsResult 
   const result: TranslateArgsResult = {}
 
   for (const pm of targets) {
-    const translation = translateSingleArgs(args, pm, command)
+    const translation = translateSingleArgs(args, pm, command, packageName)
     result[pm] = translation
   }
 

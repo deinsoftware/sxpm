@@ -20,14 +20,14 @@ describe('npm: package commands', () => {
     { cmd: 'remove', args: ['react', '--global'], expected: 'npm uninstall react --global' },
     { cmd: 'update', args: ['react'], expected: 'npm update react' },
     { cmd: 'update', args: ['react', '--global'], expected: 'npm update react --global' },
-    { cmd: 'upgrade', args: ['react'], expected: 'npm add react <package>@latest' },
-    { cmd: 'upgrade', args: ['react', '--global'], expected: 'npm add react --global <package>@latest' },
+    { cmd: 'upgrade', args: ['react'], expected: 'npm add react react@latest', packageName: 'react' },
+    { cmd: 'upgrade', args: ['react', '--global'], expected: 'npm add react --global react@latest', packageName: 'react' },
     { cmd: 'interactive', args: [], expected: 'invalid' }
   ]
 
-  cases.forEach(({ cmd, args, expected }) => {
+  cases.forEach(({ cmd, args, expected, packageName }) => {
     it(`${cmd} ${args.join(' ')}`, () => {
-      const result = translateCommand({ command: cmd, args, packageManagers: [] })
+      const result = translateCommand({ command: cmd, args, packageManagers: [], packageName })
       if (expected === 'invalid') {
         expect(result['npm'].error).toBeDefined()
       } else {

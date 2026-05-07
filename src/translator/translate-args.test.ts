@@ -141,4 +141,17 @@ describe('translateArgs', () => {
 
     expect(result['deno@2.0.0']).toBeDefined()
   })
+
+  it('should replace <package> in args config with packageName', () => {
+    const result = translateArgs({
+      args: ['upgrade', 'react', '--latest'],
+      packageManagers: ['npm'],
+      command: 'upgrade',
+      packageName: 'react'
+    })
+
+    expect(result['npm'].args).toContain('react@latest')
+    expect(result['npm'].args).not.toContain('--latest')
+    expect(result['npm'].args).not.toContain('<package>')
+  })
 })

@@ -35,8 +35,8 @@ const npm: PackageConfiguration = {
       i: 'ci',
       install: 'ci'
     },
-    '--latest': ['', -1],
-    '-L': ['', -1],
+    '--latest': ['<package>@latest', 1],
+    '-L': ['<package>@latest', 1],
     '--package-lock': '--no-package-lock',
     '-P': '--no-package-lock'
   }
