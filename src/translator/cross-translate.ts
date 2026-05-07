@@ -1,27 +1,32 @@
 import { translateCommand } from './translate-command.js'
 import { translateArgs } from './translate-args.js'
-import type { TranslateParams, TranslateResult } from '../types/translator.types.js'
+import { availablePackages } from '../managers/index.js'
+import type { CrossTranslateParams, CrossTranslateResult } from '../managers/cross-translate.types.js'
 
-export function translate(params: TranslateParams): TranslateResult {
+export function crossTranslate(params: CrossTranslateParams): CrossTranslateResult {
     const { command, args, packageManagers, packageName } = params
+
+    const targets = packageManagers.length === 0
+        ? availablePackages()
+        : packageManagers
 
     const cmdResult = translateCommand({
         command,
         args,
-        packageManagers,
+        packageManagers: targets,
         packageName
     })
 
     const argsResult = translateArgs({
         args,
-        packageManagers,
+        packageManagers: targets,
         command,
         packageName
     })
 
-    const result: TranslateResult = {}
+    const result: CrossTranslateResult = {}
 
-    for (const pm of packageManagers) {
+    for (const pm of targets) {
         const cmd = cmdResult[pm]
         const arg = argsResult[pm]
 

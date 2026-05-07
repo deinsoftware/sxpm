@@ -48,14 +48,14 @@ Install with any package manager:
 
 ## Usage
 
-### translate
+### crossTranslate
 
 Translates a command with its arguments to one or more package managers.
 
 ```typescript
-import { translate } from 'sxpm'
+import { crossTranslate } from 'sxpm'
 
-const result = translate({
+const result = crossTranslate({
   command: 'add',
   args: ['react', '--save-dev'],
   packageManagers: ['npm', 'yarn', 'pnpm']
