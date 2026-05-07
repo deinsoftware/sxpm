@@ -114,12 +114,12 @@ Translates a command and its arguments to one or more package managers.
 
 **Params:**
 
-| Param             | Type                  | Description                                                      |
-| ----------------- | --------------------- | ---------------------------------------------------------------- |
-| `command`         | `string`              | The sxpm command to translate                                     |
-| `args`            | `string[]`            | Arguments for the command                                       |
-| `packageManagers` | `PackageManagerList[]`| Target package managers (empty = all)                            |
-| `packageName`     | `string` (optional)   | Package name to replace `<package>` placeholder                  |
+| Param             | Type                  | Description                                     |
+| ----------------- | --------------------- | ----------------------------------------------- |
+| `command`         | `string`              | The sxpm command to translate                   |
+| `args`            | `string[]`            | Arguments for the command                       |
+| `packageManagers` | `PackageManagerList[]`| Target package managers (empty = all)           |
+| `packageName`     | `string` (optional)   | Package name to replace `<package>` placeholder |
 
 **Returns:** `TranslateResult`
 
@@ -134,12 +134,12 @@ interface TranslateResult {
 }
 ```
 
-| Property   | Type                  | Description                              |
-| ---------- | --------------------- | -------------------------------------- |
-| `command`  | `string`              | Translated command                     |
-| `args`     | `string[]`            | Translated arguments                  |
-| `cli`      | `string`              | Full CLI command string                |
-| `error`    | `string` (optional)   | Error message if not available           |
+| Property   | Type                  | Description                    |
+| ---------- | --------------------- | ------------------------------ |
+| `command`  | `string`              | Translated command             |
+| `args`     | `string[]`            | Translated arguments           |
+| `cli`      | `string`              | Full CLI command string        |
+| `error`    | `string` (optional)   | Error message if not available |
 
 ⇧ [Back to menu](#menu)
 
@@ -147,14 +147,14 @@ interface TranslateResult {
 
 ## Supported Package Managers
 
-| Manager        | Version      | Lock File           |
-| -------------- | ------------ | ------------------ |
-| **npm**        | 7+          | `package-lock.json`|
-| **yarn**       | Classic     | `yarn.lock`        |
-| **yarn@berry**| 2+ (Berry)  | `yarn.lock`        |
-| **pnpm**       | 7+          | `pnpm-lock.yaml`   |
-| **bun**        | 1+          | `bun.lock`         |
-| **deno**       | 2.0+        | `deno.lock`        |
+| Manager        | Version     | Lock File           |
+| -------------- | ----------- | ------------------- |
+| **npm**        | 7+          | `package-lock.json` |
+| **yarn**       | Classic     | `yarn.lock`         |
+| **yarn@berry** | 2+ (Berry)  | `yarn.lock`         |
+| **pnpm**       | 7+          | `pnpm-lock.yaml`    |
+| **bun**        | 1+          | `bun.lock`          |
+| **deno**       | 2.0+        | `deno.lock`         |
 
 ---
 

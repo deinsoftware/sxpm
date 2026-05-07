@@ -1,6 +1,6 @@
-MIT License
+# MIT License
 
-Copyright (c) 2026 deinsoftware
+Copyright (c) 2026 dein Software
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
