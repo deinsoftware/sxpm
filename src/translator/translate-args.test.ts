@@ -37,8 +37,7 @@ describe('translateArgs', () => {
       packageManagers: ['yarn']
     })
 
-    expect(result['yarn'].args).toContain('--save-dev')
-    expect(result['yarn'].args).not.toContain('--dev')
+    expect(result['yarn'].args).toContain('--dev')
   })
 
   it('should translate --frozen to --frozen-lockfile for yarn', () => {
@@ -121,8 +120,8 @@ describe('translateArgs', () => {
       command: 'upgrade'
     })
 
-    expect(result['npm'].args).toContain('<package>@latest')
     expect(result['npm'].args).not.toContain('--latest')
+    expect(result['npm'].args).toContain('react')
   })
 
   it('should use all package managers when empty array', () => {

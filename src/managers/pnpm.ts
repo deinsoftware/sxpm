@@ -21,7 +21,8 @@ const pnpm: PackageConfiguration = {
     upgrade: ['update', '--latest'],
     ug: ['update', '--latest'],
     interactive: ['upgrade', '--interactive'],
-    ui: ['upgrade', '--interactive']
+    ui: ['upgrade', '--interactive'],
+    clean: ['', -1]
   },
   args: {
     '--frozen': '--frozen-lockfile',

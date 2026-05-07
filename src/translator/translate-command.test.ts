@@ -33,7 +33,7 @@ describe('translateCommand', () => {
     })
 
     expect(result['npm'].command).toBe('add')
-    expect(result['npm'].args).toContain('--latest')
+    expect(result['npm'].args).toContain('<package>@latest')
   })
 
   it('should keep "install" for yarn (no translation defined)', () => {

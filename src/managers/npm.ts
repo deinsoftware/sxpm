@@ -12,15 +12,17 @@ const npm: PackageConfiguration = {
   logFile: 'npm-debug.log',
   install: 'npm install sxpm --global',
   cmds: {
+    add: 'install',
     remove: 'uninstall',
     r: 'uninstall',
     rm: 'uninstall',
     un: 'uninstall',
     up: 'update',
     ud: 'update',
-    upgrade: ['add', '--latest'],
-    ug: ['add', '--latest'],
+    upgrade: ['add', '<package>@latest'],
+    ug: ['add', '<package>@latest'],
     interactive: ['', -1],
+    clean: ['cache', 'clean'],
     run: { '--': '--' },
     create: { '--': '--' }
   },
@@ -33,8 +35,8 @@ const npm: PackageConfiguration = {
       i: 'ci',
       install: 'ci'
     },
-    '--latest': ['<package>@latest', 1],
-    '-L': ['<package>@latest', 1],
+    '--latest': ['', -1],
+    '-L': ['', -1],
     '--package-lock': '--no-package-lock',
     '-P': '--no-package-lock'
   }

@@ -12,14 +12,18 @@ const yarn: PackageConfiguration = {
   logFile: 'yarn-error.log',
   install: 'yarn global add sxpm',
   cmds: {
-    clean: ['cache', 'clean'],
-    upgrade: ['add', '--latest'],
-    ug: ['add', '--latest'],
-    interactive: ['upgrade', '--interactive'],
-    ui: ['upgrade', '--interactive']
+    up: 'upgrade',
+    ug: 'upgrade',
+    interactive: 'upgrade-interactive',
+    ui: 'upgrade-interactive'
   },
   args: {
     '--frozen': '--frozen-lockfile',
+    '--global': ['-g', 1],
+    '--save-dev': '--dev',
+    '--save-optional': '--optional',
+    '--save-peer': '--peer',
+    '--save-exact': '--exact',
     '--package-lock': ['', -1],
     '-P': ['', -1]
   }

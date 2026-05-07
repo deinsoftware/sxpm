@@ -15,6 +15,7 @@ const bun: PackageConfiguration = {
     upgrade: ['add', '--latest'],
     ug: ['add', '--latest'],
     interactive: ['', -1],
+    clean: ['pm', 'cache', 'rm'],
     unlink: ['remove', '--global'],
     link: ['add', '--global']
   },
