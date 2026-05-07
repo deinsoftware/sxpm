@@ -1,5 +1,21 @@
 import type { PackageManagerList } from './packages.types.js'
 
+export type TranslateParams = {
+    command: string
+    args: string[]
+    packageManagers: PackageManagerList[]
+    packageName?: string
+}
+
+export type TranslateResult = {
+    [packageManager: string]: {
+        command: string
+        args: string[]
+        cli: string
+        error?: string
+    }
+}
+
 export type TranslateCommandParams = {
     command: string
     args: string[]
