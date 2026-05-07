@@ -1,16 +1,6 @@
 import type { PackageManagerList } from '../types/packages.types.js'
-import { getPackageConfig } from '../managers/index.js'
-
-export type TranslateCommandParams = {
-  command: string
-  args: string[]
-  targetPM: PackageManagerList
-}
-
-export type TranslateCommandResult = {
-  command: string
-  args: string[]
-}
+import { getPackageConfig, availablePackages } from '../managers/index.js'
+import type { TranslateCommandParams, TranslateCommandResult } from '../types/translator.types.js'
 
 const replaceCommand = (args: string[], oldCmd: string, newCmd: string): void => {
   const index = args?.findIndex((arg) => arg === oldCmd)
@@ -24,40 +14,50 @@ const addArgs = (args: string[], flags: (string | number)[]): void => {
   args.push(...textFlags)
 }
 
-export function translateCommand(params: TranslateCommandParams): TranslateCommandResult {
-  const { command, args, targetPM } = params
-  const config = getPackageConfig(targetPM)
+const translateSingle = (
+  command: string,
+  args: string[],
+  targetPM: PackageManagerList
+): TranslateCommandResult[string] => {
+  const pmParts = targetPM.split('@')
+  const basePM = pmParts[0]
+  const version = pmParts[1]
+
+  const config = getPackageConfig(basePM as PackageManagerList, version)
 
   if (!config) {
-    return { command, args: [...args] }
+    const versionMsg = version ? ` ${version}` : ''
+    return {
+      command,
+      args: [...args],
+      cli: '',
+      error: `Package manager${versionMsg} not supported`
+    }
   }
 
   const action = config.cmds[command]
+  let newCommand = command
+  const newArgs = [...args]
 
   if (typeof action === 'string') {
-    // Simple string replacement
-    const newArgs = [...args]
     replaceCommand(newArgs, command, action)
-    return { command: action, args: newArgs }
-  }
+    newCommand = action
+  } else if (Array.isArray(action)) {
+    const [cmd, ...rest] = action
 
-  if (Array.isArray(action)) {
-    const [newCommand, ...rest] = action
-
-    // If rest[0] is -1, the command is not supported
     if (rest[0] === -1) {
-      throw new Error(`The ${command} command is not available on ${targetPM}`)
+      return {
+        command,
+        args: [...args],
+        cli: '',
+        error: `Command '${command}' not available on ${config.cmd}`
+      }
     }
 
-    const newArgs = [...args]
-    replaceCommand(newArgs, command, newCommand)
+    replaceCommand(newArgs, command, cmd)
     addArgs(newArgs, rest)
-    return { command: newCommand, args: newArgs }
-  }
-
-  // If action is an object (positional), handle it
-  if (typeof action === 'object' && action !== null && !Array.isArray(action)) {
-    const newArgs = [...args]
+    newCommand = cmd
+  } else if (typeof action === 'object' && action !== null && !Array.isArray(action)) {
     const key = Object.keys(action)[0] ?? ''
     const value = action[key] ?? ''
 
@@ -65,10 +65,32 @@ export function translateCommand(params: TranslateCommandParams): TranslateComma
     if (typeof value === 'string' && start > 0) {
       newArgs.splice(start, 0, value)
     }
-
-    return { command, args: newArgs }
   }
 
-  // No translation needed, return as-is
-  return { command, args: [...args] }
+  const cli = [config.cmd, newCommand, ...newArgs].join(' ')
+
+  return {
+    command: newCommand,
+    args: newArgs,
+    cli
+  }
+}
+
+export function translateCommand(
+  params: TranslateCommandParams
+): TranslateCommandResult {
+  const { command, args, packageManagers } = params
+
+  const targets = packageManagers.length === 0
+    ? availablePackages()
+    : packageManagers
+
+  const result: TranslateCommandResult = {}
+
+  for (const pm of targets) {
+    const translation = translateSingle(command, args, pm)
+    result[pm] = translation
+  }
+
+  return result
 }

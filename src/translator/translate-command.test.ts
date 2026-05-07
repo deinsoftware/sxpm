@@ -1,176 +1,198 @@
 import { describe, it, expect } from 'vitest'
-import { translateCommand } from './translate-command.js'
+import { translateCommand } from 'sxpm'
 
 describe('translateCommand', () => {
-  // npm translations
   it('should translate "remove" to "uninstall" for npm', () => {
     const result = translateCommand({
       command: 'remove',
       args: ['react'],
-      targetPM: 'npm'
+      packageManagers: ['npm']
     })
 
-    expect(result.command).toBe('uninstall')
-    expect(result.args).toContain('react')
+    expect(result['npm'].command).toBe('uninstall')
+    expect(result['npm'].args).toContain('react')
+    expect(result['npm'].cli).toContain('uninstall')
+  })
+
+  it('should translate to multiple package managers', () => {
+    const result = translateCommand({
+      command: 'remove',
+      args: ['react'],
+      packageManagers: ['npm', 'pnpm']
+    })
+
+    expect(result['npm'].command).toBe('uninstall')
+    expect(result['pnpm'].command).toBe('uninstall')
   })
 
   it('should translate "upgrade" with args for npm', () => {
     const result = translateCommand({
       command: 'upgrade',
       args: ['react'],
-      targetPM: 'npm'
+      packageManagers: ['npm']
     })
 
-    expect(result.command).toBe('add')
-    expect(result.args).toContain('--latest')
+    expect(result['npm'].command).toBe('add')
+    expect(result['npm'].args).toContain('--latest')
   })
 
-  // yarn doesn't have install translation (stays as install)
   it('should keep "install" for yarn (no translation defined)', () => {
     const result = translateCommand({
       command: 'install',
       args: ['react'],
-      targetPM: 'yarn'
+      packageManagers: ['yarn']
     })
 
-    expect(result.command).toBe('install')
+    expect(result['yarn'].command).toBe('install')
   })
 
   it('should keep "remove" for yarn', () => {
     const result = translateCommand({
       command: 'remove',
       args: ['react'],
-      targetPM: 'yarn'
+      packageManagers: ['yarn']
     })
 
-    expect(result.command).toBe('remove')
+    expect(result['yarn'].command).toBe('remove')
   })
 
-  // pnpm translations
   it('should keep "install" for pnpm', () => {
     const result = translateCommand({
       command: 'install',
       args: ['react'],
-      targetPM: 'pnpm'
+      packageManagers: ['pnpm']
     })
 
-    expect(result.command).toBe('install')
+    expect(result['pnpm'].command).toBe('install')
   })
 
   it('should translate "remove" to "uninstall" for pnpm', () => {
     const result = translateCommand({
       command: 'remove',
       args: ['react'],
-      targetPM: 'pnpm'
+      packageManagers: ['pnpm']
     })
 
-    expect(result.command).toBe('uninstall')
+    expect(result['pnpm'].command).toBe('uninstall')
   })
 
-  // bun translations
   it('should keep "install" for bun', () => {
     const result = translateCommand({
       command: 'install',
       args: ['react'],
-      targetPM: 'bun'
+      packageManagers: ['bun']
     })
 
-    expect(result.command).toBe('install')
+    expect(result['bun'].command).toBe('install')
   })
 
-  // deno translations
   it('should keep "install" for deno', () => {
     const result = translateCommand({
       command: 'install',
       args: ['react'],
-      targetPM: 'deno'
+      packageManagers: ['deno']
     })
 
-    expect(result.command).toBe('install')
+    expect(result['deno'].command).toBe('install')
   })
 
-  // no translation needed
   it('should return same command if no translation needed', () => {
     const result = translateCommand({
       command: 'install',
       args: ['react'],
-      targetPM: 'npm'
+      packageManagers: ['npm']
     })
 
-    expect(result.command).toBe('install')
+    expect(result['npm'].command).toBe('install')
   })
 
-  // unsupported command should throw error
-  it('should throw error for unsupported command', () => {
-    expect(() =>
-      translateCommand({
-        command: 'interactive',
-        args: [],
-        targetPM: 'npm'
-      })
-    ).toThrow('The interactive command is not available on npm')
+  it('should return error for unsupported command', () => {
+    const result = translateCommand({
+      command: 'interactive',
+      args: [],
+      packageManagers: ['npm']
+    })
+
+    expect(result['npm'].error).toBeDefined()
+    expect(result['npm'].error).toContain('not available')
   })
 
-  // object-type action (positional arg translation)
   it('should handle object-type action for run command in npm', () => {
     const result = translateCommand({
       command: 'run',
       args: ['build', '--'],
-      targetPM: 'npm'
+      packageManagers: ['npm']
     })
 
-    expect(result.command).toBe('run')
-    expect(result.args).toContain('--')
-    expect(result.args).toContain('build')
-  })
-
-  it('should handle object-type action with key at index > 0', () => {
-    const result = translateCommand({
-      command: 'run',
-      args: ['build', '--'],
-      targetPM: 'npm'
-    })
-
-    expect(result.command).toBe('run')
-    expect(result.args).toContain('--')
-    expect(result.args).toContain('build')
+    expect(result['npm'].command).toBe('run')
+    expect(result['npm'].args).toContain('--')
+    expect(result['npm'].args).toContain('build')
   })
 
   it('should handle object-type action for create command in npm', () => {
     const result = translateCommand({
       command: 'create',
       args: ['--', 'react-app'],
-      targetPM: 'npm'
+      packageManagers: ['npm']
     })
 
-    expect(result.command).toBe('create')
-    expect(result.args).toContain('--')
-    expect(result.args).toContain('react-app')
+    expect(result['npm'].command).toBe('create')
+    expect(result['npm'].args).toContain('--')
+    expect(result['npm'].args).toContain('react-app')
   })
 
-  // no config found
   it('should return original when config not found', () => {
     const result = translateCommand({
       command: 'install',
       args: ['react'],
-      targetPM: 'invalid' as any
+      packageManagers: ['invalid' as any]
     })
 
-    expect(result.command).toBe('install')
-    expect(result.args).toContain('react')
+    expect(result['invalid' as any].command).toBe('install')
+    expect(result['invalid' as any].args).toContain('react')
   })
 
-  // replaceCommand: when args contains the command string
   it('should replace command in args if present', () => {
     const result = translateCommand({
       command: 'remove',
       args: ['remove', 'react'],
-      targetPM: 'npm'
+      packageManagers: ['npm']
     })
 
-    expect(result.command).toBe('uninstall')
-    expect(result.args).toContain('uninstall')
-    expect(result.args).toContain('react')
-    expect(result.args).not.toContain('remove')
+    expect(result['npm'].command).toBe('uninstall')
+    expect(result['npm'].args).toContain('uninstall')
+    expect(result['npm'].args).toContain('react')
+    expect(result['npm'].args).not.toContain('remove')
+  })
+
+  it('should use all package managers when empty array', () => {
+    const result = translateCommand({
+      command: 'remove',
+      args: ['react'],
+      packageManagers: []
+    })
+
+    expect(Object.keys(result).length).toBeGreaterThan(1)
+  })
+
+  it('should handle yarn@berry', () => {
+    const result = translateCommand({
+      command: 'upgrade',
+      args: ['react'],
+      packageManagers: ['yarn@berry']
+    })
+
+    expect(result['yarn@berry']).toBeDefined()
+  })
+
+  it('should differentiate deno versions', () => {
+    const resultDeno2 = translateCommand({
+      command: 'upgrade',
+      args: ['react'],
+      packageManagers: ['deno@2.0.0']
+    })
+
+    expect(resultDeno2['deno@2.0.0']).toBeDefined()
+    expect(resultDeno2['deno@2.0.0'].cli).toBeDefined()
   })
 })

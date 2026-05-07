@@ -1,4 +1,5 @@
 import type { PackageConfiguration, PackageManagerList } from '../types/packages.types.js'
+import semver from 'semver'
 
 import npm from './npm.js'
 import pnpm from './pnpm.js'
@@ -22,8 +23,26 @@ export const packageExists = (cmd: string): cmd is PackageManagerList => {
   return packagesList.some(pkg => pkg.cmd === cmd)
 }
 
-export const getPackageConfig = (cmd: PackageManagerList): PackageConfiguration | undefined => {
-  return packagesList.find(pkg => pkg.cmd === cmd)
+export const getPackageConfig = (
+  pm: PackageManagerList,
+  version?: string
+): PackageConfiguration | undefined => {
+  const base = pm.split('@')[0]
+  const requestedVersion = version || pm.split('@')[1]
+
+  if (!requestedVersion) {
+    return packagesList.find(pkg => pkg.cmd === pm)
+  }
+
+  const matched = packagesList.find(pkg => {
+    if (pkg.cmd.startsWith(base)) {
+      if (!pkg.semver) return true
+      return semver.satisfies(requestedVersion, pkg.semver)
+    }
+    return false
+  })
+
+  return matched
 }
 
 export const availablePackages = (): PackageManagerList[] => {

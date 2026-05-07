@@ -1,6 +1,7 @@
 type PackageManagers = 'pnpm' | 'npm' | 'yarn' | 'yarn@berry' | 'bun' | 'deno'
+type PackageManagersWithVersion = `${PackageManagers}@${string}`
 type ExecuteManagers = 'pnpm dlx' | 'npx' | 'yarn dlx' | 'bunx' | 'deno run'
-export type PackageManagerList = PackageManagers | ExecuteManagers
+export type PackageManagerList = PackageManagers | PackageManagersWithVersion | ExecuteManagers
 
 type ColorValueHex = `#${string}`
 

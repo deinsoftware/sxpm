@@ -1,15 +1,6 @@
 import type { PackageManagerList } from '../types/packages.types.js'
-import { getPackageConfig } from '../managers/index.js'
-
-export type TranslateArgsParams = {
-  args: string[]
-  targetPM: PackageManagerList
-  command?: string
-}
-
-export type TranslateArgsResult = {
-  args: string[]
-}
+import { getPackageConfig, availablePackages } from '../managers/index.js'
+import type { TranslateArgsParams, TranslateArgsResult } from '../types/translator.types.js'
 
 const findFlagIndex = (args: string[], flag: string): number => {
   return args?.findIndex((arg) => arg === flag)
@@ -38,7 +29,6 @@ const moveFlag = (args: string[], argConfig: [string, number], packageName?: str
   const [action, start] = argConfig
 
   if (start === -1) {
-    // Flag not supported, remove it
     return
   }
 
@@ -50,18 +40,28 @@ const moveFlag = (args: string[], argConfig: [string, number], packageName?: str
     finalAction = action.replace('<package>', packageName)
   }
 
-  // Si start es 0, poner al principio; si es 1, después del comando; etc.
   if (start >= 0 && start < args.length) {
     args.splice(start, count, finalAction)
   }
 }
 
-export function translateArgs(params: TranslateArgsParams): TranslateArgsResult {
-  const { args, targetPM, command } = params
-  const config = getPackageConfig(targetPM)
+const translateSingleArgs = (
+  args: string[],
+  targetPM: PackageManagerList,
+  command?: string
+): TranslateArgsResult[string] => {
+  const pmParts = targetPM.split('@')
+  const basePM = pmParts[0]
+  const version = pmParts[1]
+
+  const config = getPackageConfig(basePM as PackageManagerList, version)
 
   if (!config) {
-    return { args: [...args] }
+    const versionMsg = version ? ` ${version}` : ''
+    return {
+      args: [...args],
+      error: `Package manager${versionMsg} not supported`
+    }
   }
 
   const newArgs = [...args]
@@ -93,7 +93,23 @@ export function translateArgs(params: TranslateArgsParams): TranslateArgsResult 
   return { args: newArgs }
 }
 
-// cleanFlag para uso CLI (elimina flag de los args)
+export function translateArgs(params: TranslateArgsParams): TranslateArgsResult {
+  const { args, packageManagers, command } = params
+
+  const targets = packageManagers.length === 0
+    ? availablePackages()
+    : packageManagers
+
+  const result: TranslateArgsResult = {}
+
+  for (const pm of targets) {
+    const translation = translateSingleArgs(args, pm, command)
+    result[pm] = translation
+  }
+
+  return result
+}
+
 export const cleanFlag = (args: string[], flag: string, hasValue: boolean = false): void => {
   const index = findFlagIndex(args, flag)
   if (index === -1) return

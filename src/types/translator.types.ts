@@ -1,18 +1,29 @@
-import type { PackageConfiguration, PackageManagerList } from './packages.types.js'
-import type { PackageJson as BasePackageJson } from 'type-fest'
+import type { PackageManagerList } from './packages.types.js'
 
-export type CommanderPackage = {
-    cmd?: PackageManagerList
+export type TranslateCommandParams = {
+    command: string
     args: string[]
-    origin?: 'pinned' | 'packageManager' | 'environment' | 'lock'
-    config?: PackageConfiguration
-    volta?: boolean
+    packageManagers: PackageManagerList[]
 }
 
-export type PackageJson = BasePackageJson & {
-    sxpm?: string
-    packageManager?: string
-    volta?: {
-        [key: string]: string
+export type TranslateCommandResult = {
+    [packageManager: string]: {
+        command: string
+        args: string[]
+        cli: string
+        error?: string
+    }
+}
+
+export type TranslateArgsParams = {
+    args: string[]
+    packageManagers: PackageManagerList[]
+    command?: string
+}
+
+export type TranslateArgsResult = {
+    [packageManager: string]: {
+        args: string[]
+        error?: string
     }
 }

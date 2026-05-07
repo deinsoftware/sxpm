@@ -1,7 +1,13 @@
 import { describe, it, expect } from 'vitest'
-import { getPackageConfig, packageExists, availablePackages } from './index.js'
+import {
+  getPackageConfig,
+  packageExists,
+  availablePackages,
+  translateCommand,
+  translateArgs,
+  cleanFlag
+} from 'sxpm'
 
-// Test that index.ts properly re-exports everything
 describe('index exports', () => {
   it('should return config for valid package manager', () => {
     const config = getPackageConfig('npm')
@@ -25,25 +31,22 @@ describe('index exports', () => {
     expect(packages).toContain('npm')
     expect(packages).toContain('pnpm')
     expect(packages).toContain('yarn')
+    expect(packages).toContain('deno')
     expect(packages.length).toBe(6)
   })
 
-  // Verify re-exports exist (type imports can't be tested at runtime)
-  it('should have translateCommand exported', async () => {
-    const module = await import('./index.js')
-    expect(module.translateCommand).toBeDefined()
-    expect(typeof module.translateCommand).toBe('function')
+  it('should have translateCommand exported', () => {
+    expect(translateCommand).toBeDefined()
+    expect(typeof translateCommand).toBe('function')
   })
 
-  it('should have translateArgs exported', async () => {
-    const module = await import('./index.js')
-    expect(module.translateArgs).toBeDefined()
-    expect(typeof module.translateArgs).toBe('function')
+  it('should have translateArgs exported', () => {
+    expect(translateArgs).toBeDefined()
+    expect(typeof translateArgs).toBe('function')
   })
 
-  it('should have cleanFlag exported', async () => {
-    const module = await import('./index.js')
-    expect(module.cleanFlag).toBeDefined()
-    expect(typeof module.cleanFlag).toBe('function')
+  it('should have cleanFlag exported', () => {
+    expect(cleanFlag).toBeDefined()
+    expect(typeof cleanFlag).toBe('function')
   })
 })
