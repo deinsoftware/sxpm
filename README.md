@@ -7,6 +7,8 @@
 [![types](https://img.shields.io/npm/types/sxpm.svg?color=blue)](https://www.npmjs.com/package/sxpm)
 [![license](https://img.shields.io/github/license/deinsoftware/sxpm)](LICENSE.md)
 
+![sxpm](https://raw.githubusercontent.com/deinsoftware/sxpm/main/.github/social/preview.png)
+
 ---
 
 ## Menu

@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sxpm Playground</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8f9fa;
+      --bg-tertiary: #e9ecef;
+      --text-primary: #1a1a1a;
+      --text-secondary: #6c757d;
+      --accent: #22c55e;
+      --accent-hover: #16a34a;
+      --border: #dee2e6;
+      --error: #dc3545;
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0f0f0f;
+      --bg-secondary: #1a1a1a;
+      --bg-tertiary: #252525;
+      --text-primary: #f5f5f5;
+      --text-secondary: #a0a0a0;
+      --accent: #22c55e;
+      --accent-hover: #16a34a;
+      --border: #333;
+      --error: #ef4444;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .logo span {
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .badge {
+      background: var(--bg-tertiary);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--text-secondary);
+    }
+
+    .theme-toggle svg {
+      width: 18px;
+      height: 18px;
+      color: var(--text-secondary);
+    }
+
+    [data-theme="dark"] .sun-icon {
+      display: none;
+    }
+
+    [data-theme="dark"] .moon-icon {
+      display: block;
+    }
+
+    [data-theme="light"] .sun-icon {
+      display: block;
+    }
+
+    [data-theme="light"] .moon-icon {
+      display: none;
+    }
+
+    .container {
+      flex: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      width: 100%;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    .playground {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .playground {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .panel-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .input-group {
+      padding: 1rem;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .command-input {
+      width: 100%;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.875rem 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .command-input:focus {
+      border-color: var(--accent);
+    }
+
+    .command-input::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.5;
+    }
+
+    .options {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .pm-option {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.625rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.875rem;
+    }
+
+    .pm-option:hover {
+      border-color: var(--text-secondary);
+    }
+
+    .pm-option.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--bg-primary);
+    }
+
+    .pm-checkbox {
+      width: 14px;
+      height: 14px;
+      accent-color: var(--accent);
+    }
+
+    .results-panel {
+      grid-column: 1 / -1;
+    }
+
+    .results-content {
+      padding: 1rem;
+    }
+
+    .result-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .result-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .result-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .json-output {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+      overflow-x: auto;
+      white-space: pre;
+      color: var(--accent);
+    }
+
+    .json-output .key {
+      color: #9cdcfe;
+    }
+
+    .json-output .string {
+      color: #ce9178;
+    }
+
+    .json-output .number {
+      color: #b5cea8;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+
+    .tab {
+      padding: 0.75rem 1rem;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab:hover {
+      color: var(--text-primary);
+    }
+
+    .tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-content {
+      display: none;
+      padding: 1rem;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .cli-example {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.875rem 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .cli-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9375rem;
+      color: var(--text-primary);
+    }
+
+    .copy-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.625rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      border-color: var(--text-secondary);
+      color: var(--text-primary);
+    }
+
+    .copy-btn.copied {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .copy-icon {
+      width: 14px;
+      height: 14px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-secondary);
+    }
+
+    .error-state {
+      color: var(--error);
+      padding: 1rem;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--error);
+      border-radius: 6px;
+    }
+
+    .footer {
+      padding: 1.5rem 2rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">sxpm<span>/playground</span></div>
+      <span class="badge">Library Preview</span>
+    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+      <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Try sxpm Commands</h1>
+      <p>Enter a swpm command to see how it translates across different package managers</p>
+    </section>
+
+    <div class="playground">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Command Input</span>
+        </div>
+        <div class="input-group">
+          <label class="input-label" for="command">Enter swpm command:</label>
+          <input
+            type="text"
+            id="command"
+            class="command-input"
+            placeholder="swpm add react --save-dev"
+            autocomplete="off"
+            spellcheck="false"
+          >
+          <div class="options">
+            <label class="pm-option active">
+              <input type="checkbox" class="pm-checkbox" value="npm" checked>
+              npm
+            </label>
+            <label class="pm-option active">
+              <input type="checkbox" class="pm-checkbox" value="yarn" checked>
+              yarn
+            </label>
+            <label class="pm-option active">
+              <input type="checkbox" class="pm-checkbox" value="pnpm" checked>
+              pnpm
+            </label>
+            <label class="pm-option">
+              <input type="checkbox" class="pm-checkbox" value="bun">
+              bun
+            </label>
+            <label class="pm-option">
+              <input type="checkbox" class="pm-checkbox" value="deno">
+              deno
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Package Name (optional)</span>
+        </div>
+        <div class="input-group">
+          <label class="input-label" for="packageName">For upgrade commands:</label>
+          <input
+            type="text"
+            id="packageName"
+            class="command-input"
+            placeholder="react"
+            autocomplete="off"
+            spellcheck="false"
+          >
+          <p style="margin-top: 0.75rem; font-size: 0.75rem; color: var(--text-secondary);">
+            Used when command includes &lt;package&gt; placeholder
+          </p>
+        </div>
+      </div>
+
+      <div class="panel results-panel">
+        <div class="panel-header">
+          <span class="panel-title">Translation Results</span>
+        </div>
+        <div class="results-content">
+          <div class="result-section">
+            <div class="result-label">JSON Response</div>
+            <pre class="json-output" id="jsonOutput">// Enter a command above to see the translation</pre>
+          </div>
+          <div class="result-section">
+            <div class="result-label">CLI Output</div>
+            <div id="tabsContainer">
+              <div class="tabs" id="tabs"></div>
+              <div id="tabContents"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>
+      sxpm is a core translation engine. For CLI, try
+      <a href="https://github.com/deinsoftware/swpm" target="_blank">swpm</a>
+    </p>
+  </footer>
+
+  <script type="module">
+    const commandInput = document.getElementById('command');
+    const packageNameInput = document.getElementById('packageName');
+    const jsonOutput = document.getElementById('jsonOutput');
+    const tabsContainer = document.getElementById('tabs');
+    const tabContents = document.getElementById('tabContents');
+    const pmOptions = document.querySelectorAll('.pm-option');
+
+    const commandHistory = new Map();
+
+    function getSelectedPMs() {
+      return Array.from(pmOptions)
+        .filter(opt => opt.querySelector('input').checked)
+        .map(opt => opt.querySelector('input').value);
+    }
+
+    function parseCommand(input) {
+      if (!input.trim()) return { command: '', args: [] };
+
+      const parts = input.trim().split(/\s+/);
+      const cmd = parts[0].replace(/^(swpm|npm|yarn|pnpm|bun|deno)$/, m => {
+        const map = {
+          'swpm': 'install',
+          'npm': 'install',
+          'yarn': 'install',
+          'pnpm': 'install',
+          'bun': 'install',
+          'deno': 'install'
+        };
+        return map[m] || 'install';
+      });
+
+      return {
+        command: cmd,
+        args: parts.slice(1)
+      };
+    }
+
+    function translateCommand(command, args, pms, pkgName) {
+      const results = {};
+
+      const cmdMap = {
+        'add': { npm: 'install', yarn: 'add', pnpm: 'add', bun: 'add', deno: 'add' },
+        'remove': { npm: 'uninstall', yarn: 'remove', pnpm: 'uninstall', bun: 'unremove', deno: 'remove' },
+        'install': { npm: 'install', yarn: 'install', pnpm: 'install', bun: 'install', deno: 'install' },
+        'update': { npm: 'update', yarn: 'upgrade', pnpm: 'update', bun: 'update', deno: 'outdated' },
+        'upgrade': { npm: 'add', yarn: 'upgrade', pnpm: 'update', bun: null, deno: 'add' },
+        'init': { npm: 'init', yarn: 'init', pnpm: 'init', bun: 'init', deno: 'init' },
+        'run': { npm: 'run', yarn: 'run', pnpm: 'run', bun: 'run', deno: 'task' },
+        'test': { npm: 'test', yarn: 'test', pnpm: 'test', bun: 'test', deno: 'test' },
+        'build': { npm: 'run build', yarn: 'run build', pnpm: 'run build', bun: 'run build', deno: 'task' },
+        'publish': { npm: 'publish', yarn: 'publish', pnpm: 'publish', bun: 'publish', deno: 'publish' }
+      };
+
+      const argsMap = {
+        '--save-dev': { npm: '--save-dev', yarn: '--dev', pnpm: '--save-dev', bun: '--dev', deno: '--dev' },
+        '--save-optional': { npm: '--save-optional', yarn: '--optional', pnpm: '--save-optional', bun: '--optional', deno: '--optional' },
+        '--save-peer': { npm: '--save-peer', yarn: '--peer', pnpm: '--save-peer', bun: null, deno: '--peer' },
+        '--save-exact': { npm: '--save-exact', yarn: '--exact', pnpm: '--save-exact', bun: '--exact', deno: null },
+        '--global': { npm: '--global', yarn: 'global', pnpm: '--global', bun: '--global', deno: '-g' },
+        '--frozen': { npm: 'ci', yarn: '--frozen-lockfile', pnpm: '--frozen-lockfile', bun: '--frozen-lockfile', deno: '--frozen' },
+        '--latest': { npm: '@latest', yarn: '--latest', pnpm: '--latest', bun: null, deno: null }
+      };
+
+      for (const pm of pms) {
+        let newCmd = cmdMap[command]?.[pm];
+        let newArgs = [...args];
+
+        if (!newCmd) {
+          results[pm] = {
+            command: command,
+            args: args,
+            cli: '',
+            error: `Command '${command}' not available on ${pm}`
+          };
+          continue;
+        }
+
+        newArgs = newArgs.map(arg => argsMap[arg]?.[pm] ?? arg);
+
+        if (pkgName && command === 'upgrade') {
+          if (pm === 'npm') {
+            newArgs.push(`${pkgName}@latest`);
+          } else if (pm === 'yarn' || pm === 'pnpm') {
+            newArgs.push('--latest');
+          }
+        }
+
+        results[pm] = {
+          command: newCmd,
+          args: newArgs,
+          cli: `${pm}${pm === 'yarn' && newCmd === 'add' ? ' add' : ' '}${newCmd} ${newArgs.join(' ')}`.trim()
+        };
+      }
+
+      return results;
+    }
+
+    function formatJson(obj) {
+      return JSON.stringify(obj, null, 2)
+        .replace(/"([^"]+)":/g, '<span class="key">"$1"</span>:')
+        .replace(/: "([^"]*)"/g, ': <span class="string">"$1"</span>')
+        .replace(/: (\d+)/g, ': <span class="number">$1</span>');
+    }
+
+    function getCliForPm(results, pm) {
+      const r = results[pm];
+      if (!r) return '';
+      if (r.error) return r.error;
+      return r.cli;
+    }
+
+    function updateResults() {
+      const input = commandInput.value;
+      const pkgName = packageNameInput.value || undefined;
+      const pms = getSelectedPMs();
+
+      if (!input.trim() || pms.length === 0) {
+        jsonOutput.innerHTML = '// Enter a command and select at least one package manager';
+        tabsContainer.innerHTML = '';
+        tabContents.innerHTML = '';
+        return;
+      }
+
+      const { command, args } = parseCommand(input);
+      const results = translateCommand(command, args, pms, pkgName);
+
+      jsonOutput.innerHTML = formatJson(results);
+
+      tabsContainer.innerHTML = pms.map(pm =>
+        `<button class="tab${pm === pms[0] ? ' active' : ''}" data-pm="${pm}">${pm}</button>`
+      ).join('');
+
+      tabContents.innerHTML = pms.map(pm => {
+        const cli = getCliForPm(results, pm);
+        const hasError = results[pm]?.error;
+        return `
+          <div class="tab-content${pm === pms[0] ? ' active' : ''}" data-pm="${pm}">
+            <div class="cli-example">
+              <code class="cli-text">${cli}</code>
+              <button class="copy-btn" data-copy="${cli}">
+                <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                Copy
+              </button>
+            </div>
+            ${hasError ? `<div class="error-state">${cli}</div>` : ''}
+          </div>
+        `;
+      }).join('');
+
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          tab.classList.add('active');
+          document.querySelector(`.tab-content[data-pm="${tab.dataset.pm}"]`).classList.add('active');
+        });
+      });
+
+      document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const text = btn.dataset.copy;
+          await navigator.clipboard.writeText(text);
+          btn.classList.add('copied');
+          btn.innerHTML = `
+            <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Copied!
+          `;
+          setTimeout(() => {
+            btn.classList.remove('copied');
+            btn.innerHTML = `
+              <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              Copy
+            `;
+          }, 2000);
+        });
+      });
+    }
+
+    commandInput.addEventListener('input', updateResults);
+    packageNameInput.addEventListener('input', updateResults);
+
+    const themeToggle = document.getElementById('themeToggle');
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('sxpm-theme', theme);
+    }
+
+    function getSystemTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    const savedTheme = localStorage.getItem('sxpm-theme');
+    const systemTheme = getSystemTheme();
+    setTheme(savedTheme || systemTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      if (!localStorage.getItem('sxpm-theme')) {
+        setTheme(e.matches ? 'dark' : 'light');
+      }
+    });
+
+    pmOptions.forEach(opt => {
+      opt.addEventListener('click', (e) => {
+        if (e.target.tagName !== 'INPUT') {
+          const checkbox = opt.querySelector('input');
+          checkbox.checked = !checkbox.checked;
+          opt.classList.toggle('active', checkbox.checked);
+        }
+        updateResults();
+      });
+    });
+
+    updateResults();
+  </script>
+</body>
+</html>
