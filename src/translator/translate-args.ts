@@ -1,6 +1,6 @@
 import type { PackageManagerList } from '../types/packages.types.js'
 import { getPackageConfig, availablePackages } from '../managers/index.js'
-import type { TranslateArgsParams, TranslateArgsResult } from '../types/translator.types.js'
+import type { TranslateArgsParams, TranslateArgsResult } from '../types/translate-args.types.js'
 
 const findFlagIndex = (args: string[], flag: string): number => {
   return args?.findIndex((arg) => arg === flag)

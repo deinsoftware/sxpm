@@ -1,6 +1,6 @@
 import type { PackageManagerList } from '../types/packages.types.js'
 import { getPackageConfig, availablePackages } from '../managers/index.js'
-import type { TranslateCommandParams, TranslateCommandResult } from '../types/translator.types.js'
+import type { TranslateCommandParams, TranslateCommandResult } from '../types/translate-command.types.js'
 
 const replaceCommand = (args: string[], oldCmd: string, newCmd: string): void => {
   const index = args?.findIndex((arg) => arg === oldCmd)

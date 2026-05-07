@@ -1,13 +1,13 @@
-import type { PackageManagerList } from '../types/packages.types.js'
+import type { PackageManagerList } from './packages.types.js'
 
-export type CrossTranslateParams = {
+export type TranslateCommandParams = {
     command: string
     args: string[]
     packageManagers: PackageManagerList[]
     packageName?: string
 }
 
-export type CrossTranslateResult = {
+export type TranslateCommandResult = {
     [packageManager: string]: {
         command: string
         args: string[]

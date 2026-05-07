@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest'
 import { crossTranslate } from 'sxpm'
-import type { CrossTranslateParams, CrossTranslateResult } from 'sxpm'
 
 describe('crossTranslate', () => {
   it('should translate command and args combined', () => {
