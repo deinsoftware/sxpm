@@ -6,14 +6,21 @@
   <title>sxpm Playground</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&family=Leckerli+One&family=Nova+Square&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/icon_16.png" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/icon_32.png" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" sizes="48x48" href="icons/icon_48.png" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" sizes="64x64" href="icons/icon_64.png" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-dark_16.png" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-dark_32.png" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="48x48" href="icons/icon-dark_48.png" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="64x64" href="icons/icon-dark_64.png" media="(prefers-color-scheme: dark)">
 </head>
 <body>
   <header class="header">
     <div class="header-left">
-      <div class="logo">sxpm<span>/playground</span></div>
-      <span class="badge">Library Preview</span>
+      <div class="logo" title="Switch Package Manager"><span class="logo-s">s</span><span class="logo-x">x</span><span class="logo-p">p</span><span class="logo-m">m</span> <span class="logo-tag">playground</span></div>
     </div>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
       <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -34,57 +41,63 @@
   </header>
 
   <main class="container">
-    <section class="hero">
-      <h1>Try sxpm Commands</h1>
-      <p>Enter a swpm command to see how it translates across different package managers</p>
-    </section>
-
     <div class="playground">
       <div class="panel">
         <div class="panel-header">
           <span class="panel-title">Command Input</span>
         </div>
         <div class="input-group">
-          <label class="input-label" for="command">Enter swpm command:</label>
-          <input
-            type="text"
-            id="command"
-            class="command-input"
-            placeholder="swpm add react --save-dev"
-            autocomplete="off"
-            spellcheck="false"
-          >
+          <label class="input-label" for="command">Enter a <a href="https://github.com/deinsoftware/swpm/#commands" target="_blank" class="input-link">swpm command</a>:</label>
+          <div style="position: relative;">
+            <input
+              type="text"
+              id="command"
+              class="command-input"
+              placeholder="swpm add react --save-dev"
+              list="command-examples"
+              autocomplete="off"
+              spellcheck="false"
+            >
+            <button id="clearBtn" class="clear-btn" aria-label="Clear command">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <datalist id="command-examples">
+            <option value="swpm add react --save-dev">
+            <option value="swpm add react --save-peer">
+            <option value="swpm add react --save-exact">
+            <option value="swpm add react --global">
+            <option value="swpm remove react">
+            <option value="swpm remove react --save-dev">
+            <option value="swpm install">
+            <option value="swpm install --frozen">
+            <option value="swpm update">
+            <option value="swpm upgrade react --latest">
+            <option value="swpm run build">
+            <option value="swpm test">
+            <option value="swpm init">
+            <option value="swpm publish">
+          </datalist>
           <div class="options">
-            <label class="pm-option active">
-              <input type="checkbox" class="pm-checkbox" value="npm" checked>
-              npm
-            </label>
-            <label class="pm-option active">
-              <input type="checkbox" class="pm-checkbox" value="yarn" checked>
-              yarn
-            </label>
-            <label class="pm-option active">
-              <input type="checkbox" class="pm-checkbox" value="pnpm" checked>
-              pnpm
-            </label>
-            <label class="pm-option">
-              <input type="checkbox" class="pm-checkbox" value="bun">
-              bun
-            </label>
-            <label class="pm-option">
-              <input type="checkbox" class="pm-checkbox" value="deno">
-              deno
-            </label>
+            <button class="pm-option active" data-pm="npm" type="button">npm</button>
+            <button class="pm-option active" data-pm="yarn" type="button">yarn</button>
+            <button class="pm-option active" data-pm="yarn@berry" type="button">yarn@berry</button>
+            <button class="pm-option active" data-pm="pnpm" type="button">pnpm</button>
+            <button class="pm-option active" data-pm="bun" type="button">bun</button>
+            <button class="pm-option active" data-pm="deno" type="button">deno</button>
           </div>
         </div>
       </div>
 
-      <div class="panel">
+      <div class="panel" style="display: none;">
         <div class="panel-header">
           <span class="panel-title">Package Name (optional)</span>
         </div>
         <div class="input-group">
-          <label class="input-label" for="packageName">For upgrade commands:</label>
+          <label class="input-label" for="packageName">Package name:</label>
           <input
             type="text"
             id="packageName"
@@ -93,26 +106,28 @@
             autocomplete="off"
             spellcheck="false"
           >
-          <p class="input-hint">Used when command includes &lt;package&gt; placeholder</p>
+          <p class="input-hint">Auto-detected for upgrade commands</p>
         </div>
       </div>
 
-      <div class="panel results-panel">
+      <div class="panel cli-panel">
         <div class="panel-header">
-          <span class="panel-title">Translation Results</span>
+          <span class="panel-title">CLI Output</span>
         </div>
-        <div class="results-content">
-          <div class="result-section">
-            <div class="result-label">JSON Response</div>
-            <pre class="json-output" id="jsonOutput">// Enter a command above to see the translation</pre>
+        <div class="panel-body">
+          <div id="tabsContainer">
+            <div class="tabs" id="tabs"></div>
+            <div id="tabContents"></div>
           </div>
-          <div class="result-section">
-            <div class="result-label">CLI Output</div>
-            <div id="tabsContainer">
-              <div class="tabs" id="tabs"></div>
-              <div id="tabContents"></div>
-            </div>
-          </div>
+        </div>
+      </div>
+
+      <div class="panel json-panel">
+        <div class="panel-header">
+          <span class="panel-title">JSON Response</span>
+        </div>
+        <div class="panel-body">
+          <pre class="json-output" id="jsonOutput">// Enter a command above to see the translation</pre>
         </div>
       </div>
     </div>
@@ -120,8 +135,8 @@
 
   <footer class="footer">
     <p>
-      sxpm is a core translation engine. For CLI, try
-      <a href="https://github.com/deinsoftware/swpm" target="_blank">swpm</a>
+      <span class="footer-brand">sxpm</span> is a core translation engine. For CLI, try
+      <a href="https://github.com/deinsoftware/swpm" target="_blank" class="footer-brand">swpm</a>
     </p>
   </footer>
 
