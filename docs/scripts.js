@@ -136,6 +136,14 @@ document.addEventListener('DOMContentLoaded', () => {
       `<button class="tab${p === pm ? ' active' : ''}" data-pm="${p}">${p}</button>`
     ).join('');
 
+    const activeTabEl = tabsContainer.querySelector('.tab.active');
+    if (activeTabEl) activeTabEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+
+    const tabsWrapper = tabsContainer.closest('.tabs-wrapper');
+    if (tabsWrapper) {
+      tabsWrapper.classList.toggle('single-tab', pms.length <= 2);
+    }
+
     tabsContainer.parentElement.dataset.activePm = pm;
     document.querySelector('.cli-panel').dataset.activePm = pm;
 
@@ -167,6 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector(`.tab-content[data-pm="${tab.dataset.pm}"]`).classList.add('active');
         tabsContainer.parentElement.dataset.activePm = tab.dataset.pm;
         document.querySelector('.cli-panel').dataset.activePm = tab.dataset.pm;
+        tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
       });
     });
 
@@ -199,9 +208,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const cmdSelect = document.getElementById('cmdSelect');
+  const cmdInputGroup = document.getElementById('cmdInputGroup');
+  const cmdPicker = document.getElementById('cmdPicker');
+
+  function showCmdInput(value) {
+    cmdPicker.style.display = 'none';
+    cmdInputGroup.style.display = '';
+    commandInput.value = value;
+    commandInput.focus();
+    updateResults();
+  }
+
+  function showCmdPicker() {
+    cmdInputGroup.style.display = 'none';
+    cmdPicker.style.display = '';
+    cmdSelect.value = '';
+    commandInput.value = '';
+    updateResults();
+  }
+
   function toggleClearBtn() {
     const clearBtn = document.getElementById('clearBtn');
-    if (clearBtn) clearBtn.classList.toggle('visible', commandInput.value.length > 0);
+    if (clearBtn) clearBtn.classList.toggle('visible', cmdInputGroup.style.display !== 'none' && commandInput.value.length > 0);
   }
 
   commandInput.addEventListener('input', updateResults);
@@ -211,8 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (clearBtn) {
     clearBtn.addEventListener('click', () => {
-      commandInput.value = '';
-      updateResults();
+      showCmdPicker();
       commandInput.focus();
     });
   }
@@ -252,6 +280,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  commandInput.value = 'swpm add react';
-  updateResults();
+  document.getElementById('tabPrev')?.addEventListener('click', () => {
+    const tabs = document.querySelectorAll('.tab');
+    const active = document.querySelector('.tab.active');
+    const idx = Array.from(tabs).indexOf(active);
+    if (idx > 0) tabs[idx - 1].click();
+  });
+
+  document.getElementById('tabNext')?.addEventListener('click', () => {
+    const tabs = document.querySelectorAll('.tab');
+    const active = document.querySelector('.tab.active');
+    const idx = Array.from(tabs).indexOf(active);
+    if (idx < tabs.length - 1) tabs[idx + 1].click();
+  });
+
+  cmdSelect.addEventListener('change', () => {
+    if (!cmdSelect.value) return;
+    showCmdInput(cmdSelect.value);
+  });
+
+  showCmdInput('swpm add sxpm');
 });

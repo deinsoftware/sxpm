@@ -48,39 +48,43 @@
         </div>
         <div class="input-group">
           <label class="input-label" for="command">Enter a <a href="https://github.com/deinsoftware/swpm/#commands" target="_blank" class="input-link">swpm command</a>:</label>
-          <div style="position: relative;">
-            <input
-              type="text"
-              id="command"
-              class="command-input"
-              placeholder="swpm add react --save-dev"
-              list="command-examples"
-              autocomplete="off"
-              spellcheck="false"
-            >
-            <button id="clearBtn" class="clear-btn" aria-label="Clear command">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
+          <div class="input-swap">
+            <div id="cmdInputGroup" style="display:none; position: relative;">
+              <input
+                type="text"
+                id="command"
+                class="command-input"
+                placeholder="swpm add sxpm --save-dev"
+                autocomplete="off"
+                spellcheck="false"
+              >
+              <button id="clearBtn" class="clear-btn" aria-label="Clear command">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="cmd-picker" id="cmdPicker">
+              <select id="cmdSelect" class="cmd-select">
+                <option value="" disabled selected>try an example…</option>
+                <option value="swpm add sxpm --save-dev">swpm add sxpm --save-dev</option>
+                <option value="swpm add sxpm --save-peer">swpm add sxpm --save-peer</option>
+                <option value="swpm add sxpm --save-exact">swpm add sxpm --save-exact</option>
+                <option value="swpm add sxpm --global">swpm add sxpm --global</option>
+                <option value="swpm remove sxpm">swpm remove sxpm</option>
+                <option value="swpm remove sxpm --save-dev">swpm remove sxpm --save-dev</option>
+                <option value="swpm install">swpm install</option>
+                <option value="swpm install --frozen">swpm install --frozen</option>
+                <option value="swpm update">swpm update</option>
+                <option value="swpm upgrade sxpm --latest">swpm upgrade sxpm --latest</option>
+                <option value="swpm run build">swpm run build</option>
+                <option value="swpm test">swpm test</option>
+                <option value="swpm init">swpm init</option>
+                <option value="swpm publish">swpm publish</option>
+              </select>
+            </div>
           </div>
-          <datalist id="command-examples">
-            <option value="swpm add react --save-dev">
-            <option value="swpm add react --save-peer">
-            <option value="swpm add react --save-exact">
-            <option value="swpm add react --global">
-            <option value="swpm remove react">
-            <option value="swpm remove react --save-dev">
-            <option value="swpm install">
-            <option value="swpm install --frozen">
-            <option value="swpm update">
-            <option value="swpm upgrade react --latest">
-            <option value="swpm run build">
-            <option value="swpm test">
-            <option value="swpm init">
-            <option value="swpm publish">
-          </datalist>
           <div class="options">
             <button class="pm-option active" data-pm="npm" type="button">npm</button>
             <button class="pm-option active" data-pm="yarn" type="button">yarn</button>
@@ -116,7 +120,15 @@
         </div>
         <div class="panel-body">
           <div id="tabsContainer">
-            <div class="tabs" id="tabs"></div>
+            <div class="tabs-wrapper">
+              <button class="tab-nav-btn left" id="tabPrev" aria-label="Previous tab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <div class="tabs" id="tabs"></div>
+              <button class="tab-nav-btn right" id="tabNext" aria-label="Next tab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+              </button>
+            </div>
             <div id="tabContents"></div>
           </div>
         </div>

@@ -151,6 +151,7 @@ body {
   border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
+  min-height: 132px;
 }
 
 .panel-header {
@@ -240,6 +241,45 @@ body {
   opacity: 0.5;
 }
 
+.cmd-picker {
+  position: relative;
+}
+
+.cmd-picker::after {
+  content: '';
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") center / 18px no-repeat;
+}
+
+[data-theme="dark"] .cmd-picker::after {
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%23a0a0a0' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") center / 18px no-repeat;
+}
+
+.cmd-select {
+  width: 100%;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.875rem 2.5rem 0.875rem 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  color: var(--text-primary);
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  appearance: none;
+}
+
+.cmd-select:focus {
+  border-color: var(--accent);
+}
+
 .options {
   display: flex;
   gap: 0.5rem;
@@ -324,10 +364,57 @@ body {
   color: #b5cea8;
 }
 
+.tabs-wrapper {
+  display: flex;
+  align-items: stretch;
+}
+
+.tabs-wrapper.is-empty {
+  display: none;
+}
+
+.tabs-wrapper.single-tab .tab-nav-btn {
+  display: none;
+}
+
 .tabs {
+  flex: 1;
   display: flex;
   gap: 0;
   overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-nav-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  margin: 6px;
+  transition: all 0.15s;
+  line-height: 0;
+}
+
+.tab-nav-btn:hover {
+  color: var(--text-primary);
+  background: var(--border);
+}
+
+.tab-nav-btn svg {
+  width: 18px;
+  height: 18px;
 }
 
 .tab {
@@ -347,35 +434,62 @@ body {
   color: var(--text-primary);
 }
 
+.tab[data-pm="npm"]:hover {
+  background: color-mix(in srgb, var(--pm-npm) 12%, transparent);
+}
+
+.tab[data-pm="yarn"]:hover,
+.tab[data-pm="yarn@berry"]:hover {
+  background: color-mix(in srgb, var(--pm-yarn) 12%, transparent);
+}
+
+.tab[data-pm="pnpm"]:hover {
+  background: color-mix(in srgb, var(--pm-pnpm) 12%, transparent);
+}
+
+.tab[data-pm="bun"]:hover {
+  background: color-mix(in srgb, var(--pm-bun) 12%, transparent);
+}
+
+.tab[data-pm="deno"]:hover {
+  background: color-mix(in srgb, var(--pm-deno) 12%, transparent);
+}
+
 .tab.active {
   color: var(--accent);
   border-bottom-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
 }
 
 .tab[data-pm="npm"].active {
   color: var(--pm-npm);
   border-bottom-color: var(--pm-npm);
+  background: color-mix(in srgb, var(--pm-npm) 12%, transparent);
 }
 
 .tab[data-pm="yarn"].active,
 .tab[data-pm="yarn@berry"].active {
   color: var(--pm-yarn);
   border-bottom-color: var(--pm-yarn);
+  background: color-mix(in srgb, var(--pm-yarn) 12%, transparent);
 }
 
 .tab[data-pm="pnpm"].active {
   color: var(--pm-pnpm);
   border-bottom-color: var(--pm-pnpm);
+  background: color-mix(in srgb, var(--pm-pnpm) 12%, transparent);
 }
 
 .tab[data-pm="bun"].active {
   color: var(--pm-bun);
   border-bottom-color: var(--pm-bun);
+  background: color-mix(in srgb, var(--pm-bun) 12%, transparent);
 }
 
 .tab[data-pm="deno"].active {
   color: var(--pm-deno);
   border-bottom-color: var(--pm-deno);
+  background: color-mix(in srgb, var(--pm-deno) 12%, transparent);
 }
 
 .tab-content {
@@ -440,7 +554,10 @@ body {
   color: var(--text-secondary);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.9rem;
-  opacity: 0.7;
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+  border-radius: 6px;
+  padding: 1rem;
 }
 
 .error-state {
