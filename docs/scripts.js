@@ -68,8 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         results[pm] = {
           command: command,
           args: args,
-          cli: '',
-          error: `Command '${command}' not available on ${pm}`
+          cli: `${pm} ${command} ${args.join(' ')}`.trim()
         };
         continue;
       }

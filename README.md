@@ -146,7 +146,7 @@ const result = crossTranslate({
 
 #### Error Handling
 
-Commands that are not available on certain package managers return an error:
+Commands that are **known but explicitly unavailable** on certain package managers return an error:
 
 ```typescript
 const result = crossTranslate({
@@ -161,6 +161,8 @@ console.log(result)
 //   pnpm: { command: 'interactive', args: [], cli: 'pnpm interactive' }
 // }
 ```
+
+> **Unrecognized commands and arguments** (not found in any dictionary) are **replicated as-is** without error. For example, `swpm info sxpm --json` produces `npm info sxpm --json`, `yarn info sxpm --json`, etc.
 
 ⇧ [Back to menu](#menu)
 
