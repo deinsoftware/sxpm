@@ -129,6 +129,8 @@ const result = crossTranslate({
 })
 ```
 
+> Currently only `swpm` dictionaries are available as a source. Future versions will support translating directly between any package managers (e.g., `npm` → `yarn`, `pnpm` → `bun`, etc.).
+
 #### Translate with Package Name
 
 When you need to replace `<package>` placeholder with actual package name:
