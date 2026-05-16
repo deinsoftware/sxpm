@@ -1,12 +1,12 @@
 import type { PackageConfiguration, PackageManagerList } from '../types/packages.types.js'
 import semver from 'semver'
 
-import npm from './npm.js'
-import pnpm from './pnpm.js'
-import yarn from './yarn.js'
-import yarnBerry from './yarn@berry.js'
-import bun from './bun.js'
-import deno from './deno.js'
+import npm from './swpm/npm.js'
+import pnpm from './swpm/pnpm.js'
+import yarn from './swpm/yarn.js'
+import yarnBerry from './swpm/yarn@berry.js'
+import bun from './swpm/bun.js'
+import deno from './swpm/deno.js'
 
 const packagesList: PackageConfiguration[] = [
   npm,

@@ -233,7 +233,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (clearBtn) clearBtn.classList.toggle('visible', cmdInputGroup.style.display !== 'none' && commandInput.value.length > 0);
   }
 
-  commandInput.addEventListener('input', updateResults);
+  commandInput.addEventListener('input', (e) => {
+    const val = commandInput.value;
+    if (val && !val.startsWith('swpm ')) {
+      const selStart = commandInput.selectionStart;
+      commandInput.value = 'swpm ' + val.replace(/^swpm\s*/i, '');
+      commandInput.selectionStart = commandInput.selectionEnd = selStart + 5;
+    }
+    updateResults();
+  });
   packageNameInput.addEventListener('input', updateResults);
 
   const clearBtn = document.getElementById('clearBtn');

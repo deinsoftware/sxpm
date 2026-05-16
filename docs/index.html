@@ -42,6 +42,35 @@
 
   <main class="container">
     <div class="playground">
+      <div class="docs-cards">
+        <a href="https://github.com/deinsoftware/sxpm" target="_blank" class="docs-card">
+          <div class="docs-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="7" stroke-dasharray="1.5 2" stroke-width="4"/>
+              <circle cx="12" cy="12" r="6" fill="none"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </div>
+          <div class="docs-card-body">
+            <h3 class="docs-card-title">sxpm <span class="docs-card-tag">— Switch Cross Package Manager (Core)</span></h3>
+            <p class="docs-card-desc">Cross-translation logic. Use it to embed Package Manager command translation in your own tools.</p>
+            <span class="docs-card-link">View README →</span>
+          </div>
+        </a>
+        <a href="https://github.com/deinsoftware/swpm" target="_blank" class="docs-card">
+          <div class="docs-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="4 17 10 11 4 5"/>
+              <line x1="12" y1="19" x2="20" y2="19"/>
+            </svg>
+          </div>
+          <div class="docs-card-body">
+            <h3 class="docs-card-title">swpm <span class="docs-card-tag">— Switch Package Manager (CLI)</span></h3>
+            <p class="docs-card-desc">Command Line Interface for your terminal. Use it to run any Package Manager command without remembering each syntax.</p>
+            <span class="docs-card-link">View README →</span>
+          </div>
+        </a>
+      </div>
       <div class="panel">
         <div class="panel-header">
           <span class="panel-title">Command Input</span>
@@ -85,6 +114,7 @@
               </select>
             </div>
           </div>
+          <label class="input-label">Select one or more Package Managers:</label>
           <div class="options">
             <button class="pm-option active" data-pm="npm" type="button">npm</button>
             <button class="pm-option active" data-pm="yarn" type="button">yarn</button>

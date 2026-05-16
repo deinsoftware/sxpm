@@ -5,6 +5,8 @@ export type CrossTranslateParams = {
     args: string[]
     packageManagers: PackageManagerList[]
     packageName?: string
+    /** @default 'swpm' — currently only swpm dictionaries exist; future: any PackageManagerList */
+    from?: PackageManagerList
 }
 
 export type CrossTranslateResult = {

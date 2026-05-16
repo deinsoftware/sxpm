@@ -4,7 +4,7 @@ import { availablePackages } from '../managers/index.js'
 import type { CrossTranslateParams, CrossTranslateResult } from '../types/cross-translate.types.js'
 
 export function crossTranslate(params: CrossTranslateParams): CrossTranslateResult {
-  const { command, args, packageManagers, packageName } = params
+  const { command, args, packageManagers, packageName, from = 'swpm' } = params
 
   const targets = packageManagers.length === 0
     ? availablePackages()

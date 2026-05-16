@@ -1,4 +1,4 @@
-type PackageManagers = 'pnpm' | 'npm' | 'yarn' | 'yarn@berry' | 'bun' | 'deno'
+type PackageManagers = 'pnpm' | 'npm' | 'yarn' | 'yarn@berry' | 'bun' | 'deno' | 'swpm'
 type PackageManagersWithVersion = `${PackageManagers}@${string}`
 type ExecuteManagers = 'pnpm dlx' | 'npx' | 'yarn dlx' | 'bunx' | 'deno run'
 export type PackageManagerList = PackageManagers | PackageManagersWithVersion | ExecuteManagers

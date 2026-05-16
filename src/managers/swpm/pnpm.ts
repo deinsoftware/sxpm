@@ -1,4 +1,4 @@
-import type { PackageConfiguration } from '../types/packages.types.js'
+import type { PackageConfiguration } from '../../types/packages.types.js'
 
 const pnpm: PackageConfiguration = {
   cmd: 'pnpm',

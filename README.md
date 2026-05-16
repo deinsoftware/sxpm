@@ -13,14 +13,27 @@
 
 ## Menu
 
+- [Playground](#playground)
 - [Getting Started](#getting-started)
   - [Installation](#installation)
 - [Usage](#usage)
-  - [translate](#translate)
+  - [crossTranslate](#crosstranslate)
+  - [translateCommand](#translatecommand)
+  - [translateArgs](#translateargs)
 - [API](#api)
-  - [translate](#translateparams-translateresult)
+  - [crossTranslate](#crosstranslate)
+  - [translateCommand](#translatecommand-1)
+  - [translateArgs](#translateargs-1)
 - [Supported Package Managers](#supported-package-managers)
 - [About](#about)
+
+---
+
+## Playground
+
+Try **sxpm** online at [deinsoftware.github.io/sxpm](https://deinsoftware.github.io/sxpm/)
+
+Select package managers, type a command, and see real-time translations across npm, yarn, yarn@berry, pnpm, bun, and deno. The CLI output panel shows tabs per package manager — you can embed a similar interactive translation widget in your own documentation or website.
 
 ---
 
@@ -69,12 +82,59 @@ console.log(result)
 // }
 ```
 
+### translateCommand
+
+Translates only the command (not args) to one or more package managers.
+
+```typescript
+import { translateCommand } from 'sxpm'
+
+const result = translateCommand({
+  command: 'add',
+  args: ['react', '--save-dev'],
+  packageManagers: ['npm', 'pnpm']
+})
+
+// npm: { command: 'install', args: ['react', '--save-dev'], cli: 'npm install react --save-dev' }
+// pnpm: { command: 'add', args: ['react', '--save-dev'], cli: 'pnpm add react --save-dev' }
+```
+
+### translateArgs
+
+Translates only the arguments (not command) to one or more package managers.
+
+```typescript
+import { translateArgs } from 'sxpm'
+
+const result = translateArgs({
+  args: ['--save-dev'],
+  packageManagers: ['npm', 'yarn', 'pnpm']
+})
+
+// npm: { args: ['--save-dev'] }
+// yarn: { args: ['--dev'] }
+// pnpm: { args: ['--save-dev'] }
+```
+
+#### `from` parameter
+
+All translation functions accept an optional `from` parameter indicating the source package manager format (defaults to `swpm`):
+
+```typescript
+const result = crossTranslate({
+  command: 'add',
+  args: ['react'],
+  packageManagers: ['yarn', 'pnpm'],
+  from: 'swpm'  // explicit, this is the default
+})
+```
+
 #### Translate with Package Name
 
 When you need to replace `<package>` placeholder with actual package name:
 
 ```typescript
-const result = translate({
+const result = crossTranslate({
   command: 'upgrade',
   args: ['react', '--latest'],
   packageManagers: ['npm'],
@@ -89,7 +149,7 @@ const result = translate({
 Commands that are not available on certain package managers return an error:
 
 ```typescript
-const result = translate({
+const result = crossTranslate({
   command: 'interactive',
   args: [],
   packageManagers: ['npm', 'pnpm']
@@ -108,23 +168,24 @@ console.log(result)
 
 ## API
 
-### `translate(params): TranslateResult`
+### `crossTranslate(params): CrossTranslateResult`
 
 Translates a command and its arguments to one or more package managers.
 
 **Params:**
 
-| Param             | Type                  | Description                                     |
-| ----------------- | --------------------- | ----------------------------------------------- |
-| `command`         | `string`              | The sxpm command to translate                   |
-| `args`            | `string[]`            | Arguments for the command                       |
-| `packageManagers` | `PackageManagerList[]`| Target package managers (empty = all)           |
-| `packageName`     | `string` (optional)   | Package name to replace `<package>` placeholder |
+| Param             | Type                            | Description                                                    |
+| ----------------- | ------------------------------- | -------------------------------------------------------------- |
+| `command`         | `string`                        | The swpm command to translate                                  |
+| `args`            | `string[]`                      | Arguments for the command                                      |
+| `packageManagers` | `PackageManagerList[]`          | Target package managers (empty = all)                          |
+| `packageName`     | `string` (optional)             | Package name to replace `<package>` placeholder                |
+| `from`            | `PackageManagerList` (optional) | Source package manager format (default: `swpm`)                |
 
-**Returns:** `TranslateResult`
+**Returns:** `CrossTranslateResult`
 
 ```typescript
-interface TranslateResult {
+interface CrossTranslateResult {
   [packageManager: string]: {
     command: string
     args: string[]
@@ -134,12 +195,34 @@ interface TranslateResult {
 }
 ```
 
-| Property   | Type                  | Description                    |
-| ---------- | --------------------- | ------------------------------ |
-| `command`  | `string`              | Translated command             |
-| `args`     | `string[]`            | Translated arguments           |
-| `cli`      | `string`              | Full CLI command string        |
-| `error`    | `string` (optional)   | Error message if not available |
+### `translateCommand(params): TranslateCommandResult`
+
+Translates a command to one or more package managers. Same params as crossTranslate without the cross-translation logic.
+
+### `translateArgs(params): TranslateArgsResult`
+
+Translates arguments to one or more package managers.
+
+**Params:**
+
+| Param             | Type                            | Description                                                    |
+| ----------------- | ------------------------------- | -------------------------------------------------------------- |
+| `args`            | `string[]`                      | Arguments to translate                                         |
+| `packageManagers` | `PackageManagerList[]`          | Target package managers (empty = all)                          |
+| `command`         | `string` (optional)             | Command context for flag-specific translations                 |
+| `packageName`     | `string` (optional)             | Package name to replace `<package>` placeholder                |
+| `from`            | `PackageManagerList` (optional) | Source package manager format (default: `swpm`)                |
+
+---
+
+### Other exports
+
+| Function            | Description                                    |
+| ------------------- | ---------------------------------------------- |
+| `packageExists`     | Check if a package manager is supported        |
+| `getPackageConfig`  | Get configuration for a specific PM            |
+| `availablePackages` | List all supported package managers            |
+| `cleanFlag`         | Remove a flag from an args array               |
 
 ⇧ [Back to menu](#menu)
 

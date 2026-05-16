@@ -88,7 +88,7 @@ const translateSingle = (
 export function translateCommand(
   params: TranslateCommandParams
 ): TranslateCommandResult {
-  const { command, args, packageManagers, packageName } = params
+  const { command, args, packageManagers, packageName, from = 'swpm' } = params
 
   const targets = packageManagers.length === 0
     ? availablePackages()
