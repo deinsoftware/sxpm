@@ -18,13 +18,14 @@ const translateSingle = (
   command: string,
   args: string[],
   targetPM: PackageManagerList,
-  packageName?: string
+  packageName?: string,
+  from: string = 'swpm'
 ): TranslateCommandResult[string] => {
   const pmParts = targetPM.split('@')
   const basePM = pmParts[0]
   const version = pmParts[1]
 
-  const config = getPackageConfig(basePM as PackageManagerList, version)
+  const config = getPackageConfig(basePM as PackageManagerList, version, from)
 
   if (!config) {
     const versionMsg = version ? ` ${version}` : ''
@@ -91,13 +92,13 @@ export function translateCommand(
   const { command, args, packageManagers, packageName, from = 'swpm' } = params
 
   const targets = packageManagers.length === 0
-    ? availablePackages()
+    ? availablePackages(from)
     : packageManagers
 
   const result: TranslateCommandResult = {}
 
   for (const pm of targets) {
-    const translation = translateSingle(command, args, pm, packageName)
+    const translation = translateSingle(command, args, pm, packageName, from)
     result[pm] = translation
   }
 

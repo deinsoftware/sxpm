@@ -49,13 +49,14 @@ const translateSingleArgs = (
   args: string[],
   targetPM: PackageManagerList,
   command?: string,
-  packageName?: string
+  packageName?: string,
+  from: string = 'swpm'
 ): TranslateArgsResult[string] => {
   const pmParts = targetPM.split('@')
   const basePM = pmParts[0]
   const version = pmParts[1]
 
-  const config = getPackageConfig(basePM as PackageManagerList, version)
+  const config = getPackageConfig(basePM as PackageManagerList, version, from)
 
   if (!config) {
     const versionMsg = version ? ` ${version}` : ''
@@ -98,13 +99,13 @@ export function translateArgs(params: TranslateArgsParams): TranslateArgsResult 
   const { args, packageManagers, command, packageName, from = 'swpm' } = params
 
   const targets = packageManagers.length === 0
-    ? availablePackages()
+    ? availablePackages(from)
     : packageManagers
 
   const result: TranslateArgsResult = {}
 
   for (const pm of targets) {
-    const translation = translateSingleArgs(args, pm, command, packageName)
+    const translation = translateSingleArgs(args, pm, command, packageName, from)
     result[pm] = translation
   }
 

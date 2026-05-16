@@ -94,10 +94,14 @@ document.addEventListener('DOMContentLoaded', () => {
     return results;
   }
 
+  function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
   function formatJson(obj) {
     return JSON.stringify(obj, null, 2)
       .replace(/"([^"]+)":/g, '<span class="key">"$1"</span>:')
-      .replace(/: "([^"]*)"/g, ': <span class="string">"$1"</span>')
+      .replace(/: "(.*)"/g, (m, s) => ': <span class="string">"' + escapeHtml(s) + '"</span>')
       .replace(/: (\d+)/g, ': <span class="number">$1</span>');
   }
 
@@ -152,10 +156,10 @@ document.addEventListener('DOMContentLoaded', () => {
       return `
         <div class="tab-content${p === pm ? ' active' : ''}" data-pm="${p}">
           ${r?.error
-            ? `<div class="error-state">${r.error}</div>`
+            ? `<div class="error-state">${escapeHtml(r.error)}</div>`
             : `<div class="cli-example">
-              <code class="cli-text">${r.cli}</code>
-              <button class="copy-btn" data-copy="${r.cli}">
+              <code class="cli-text">${escapeHtml(r.cli)}</code>
+              <button class="copy-btn" data-copy="${escapeHtml(r.cli)}">
                 <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                   <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>

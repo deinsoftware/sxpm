@@ -1,32 +1,33 @@
 import type { PackageConfiguration, PackageManagerList } from '../types/packages.types.js'
 import semver from 'semver'
 
-import npm from './swpm/npm.js'
-import pnpm from './swpm/pnpm.js'
-import yarn from './swpm/yarn.js'
-import yarnBerry from './swpm/yarn@berry.js'
-import bun from './swpm/bun.js'
-import deno from './swpm/deno.js'
+import swpmPackages from './swpm/index.js'
 
-const packagesList: PackageConfiguration[] = [
-  npm,
-  pnpm,
-  yarn,
-  yarnBerry,
-  bun,
-  deno
-]
+type DictionarySource = 'swpm'
 
-export default packagesList
+const dictionaries: Record<DictionarySource, PackageConfiguration[]> = {
+  swpm: swpmPackages
+}
 
-export const packageExists = (cmd: string): cmd is PackageManagerList => {
-  return packagesList.some(pkg => pkg.cmd === cmd)
+function getPackages(from: string = 'swpm'): PackageConfiguration[] {
+  return dictionaries[from as DictionarySource] ?? dictionaries.swpm
+}
+
+export default dictionaries.swpm
+
+export const packageExists = (
+  cmd: string,
+  from: string = 'swpm'
+): cmd is PackageManagerList => {
+  return getPackages(from).some(pkg => pkg.cmd === cmd)
 }
 
 export const getPackageConfig = (
   pm: PackageManagerList,
-  version?: string
+  version?: string,
+  from: string = 'swpm'
 ): PackageConfiguration | undefined => {
+  const packagesList = getPackages(from)
   const base = pm.split('@')[0]
   const requestedVersion = version || pm.split('@')[1]
 
@@ -45,6 +46,6 @@ export const getPackageConfig = (
   return matched
 }
 
-export const availablePackages = (): PackageManagerList[] => {
-  return packagesList.map(pkg => pkg.cmd as PackageManagerList)
+export const availablePackages = (from: string = 'swpm'): PackageManagerList[] => {
+  return getPackages(from).map(pkg => pkg.cmd as PackageManagerList)
 }

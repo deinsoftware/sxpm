@@ -19,6 +19,7 @@
     "paypal",
     "pnpm",
     "postbuild",
+    "swpm",
     "sxpm",
     "unpublish"
   ],
