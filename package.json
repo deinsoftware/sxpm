@@ -37,20 +37,19 @@
     "deno"
   ],
   "license": "MIT",
+  "dependencies": {
+    "semver": "7.8.2"
+  },
   "devDependencies": {
     "@eslint/eslintrc": "3.3.5",
     "@eslint/js": "10.0.1",
-    "@types/node": "25.8.0",
+    "@types/node": "25.9.2",
     "@types/semver": "7.7.1",
-    "@vitest/coverage-v8": "4.1.6",
-    "eslint": "10.4.0",
+    "@vitest/coverage-v8": "4.1.8",
+    "eslint": "10.4.1",
     "globals": "17.6.0",
-    "type-fest": "5.6.0",
+    "type-fest": "5.7.0",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.59.3",
-    "vitest": "4.1.6"
-  },
-  "dependencies": {
-    "semver": "7.8.0"
+    "typescript-eslint": "8.60.1"
   }
 }
